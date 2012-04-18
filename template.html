@@ -45,49 +45,32 @@
       </div>
     </div>
 
-    <div class="container">
-
-      <div class="row">
-        <div class="span12">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span10">
             <textarea id="editor">Start writing you text here!</textarea>
         </div>
-      </div>
-      <div class="row">
         <div class="span2">
-            <form class="form-inline">
+            <form class="form" onsubmit="return false;">
                 <select id="font-select" class="form-element" name="fonts">
                 <option class="font-ovo" value="ovo">Ovo</option>
                 <option class="font-muli" value="muli">Muli</option>
                 <option class="font-karla" value="karla">Karla</option>
                 <option class="font-lusatania" value="lusatania">Lusatania</option>
                 </select>
-            </form>
-        </div>
-        <div class="span2">
-            <form class="form-inline" onsubmit="return false;"> 
                 <input id="font-size" class="form-element" type="text" class="span2" placeholder="Font size">
-            </form>
-        </div>
-        <div class="span2">
-            <form class="form-inline">
                 <select id="background-select" class="form-element" name="backgrounds">
                 <option class="background-purple" value="purple">Purple</option>
                 <option class="background-process" value="process">Process</option>
                 </select>
-            </form>
-      </div>
-      <div class="span2">
-            <form class="form-inline">
                 <select id="music-select" class="form-element" name="music">
                 <option class="music-one" value="one">Music1</option>
                 <option class="music-two" value="two">Music2</option>
                 </select>
+                <button class="btn" type="button">
+                    Save
+                </button>
             </form>
-      </div>
-      <div class="span2">
-            <button class="btn" type="button">
-                Save
-            </button>
       </div>
 
     </div> <!-- /container -->
