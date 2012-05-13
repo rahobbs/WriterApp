@@ -49,6 +49,8 @@
       <div class="row-fluid">
         <div class="span10">
             <textarea id="editor">Start writing you text here!</textarea>
+            <div>Word Count: <span id="word-count">0</span>
+            </div>
         </div>
         <div class="span2">
             <form class="form" onsubmit="return false;">
@@ -67,11 +69,12 @@
                 <option class="music-one" value="one">Music1</option>
                 <option class="music-two" value="two">Music2</option>
                 </select>
-                <button class="btn" type="button">
+                <a id="save-button" href="" download="MyAmbiWriterFile.txt"><button class="btn" type="button">
                     Save
-                </button>
+                </button></a>
             </form>
-      </div>
+        </div> <!-- /span2 -->
+      </div> <!--/row -->
 
     </div> <!-- /container -->
 
