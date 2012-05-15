@@ -8,6 +8,15 @@ $(document).ready(function () {
     $("#background-select").change(function () {
         setBackground($("#background-select option:selected").val());
     });
+    $("#save-button").click(function () {
+        setDownloadText();
+        return true;
+    });
+    $("#editor").bind('keyup click blur focus change paste',function () {
+        $('#word-count').text(countWords());
+    });
+    
+    
 });
 
 function setEditorFont(font) {
@@ -22,4 +31,19 @@ function setBackground(background) {
     $("body").removeClass("background-purple background-process").addClass("background-"+background);
 }
 
+function setDownloadText() {
+    var dlText = $("#editor").val();
+    var tag = $("#save-button");
+    tag.attr("href", "data:text/plain;base64,"+ window.btoa(dlText));
+}
 
+function countWords() {
+    var contents = $("#editor").val();
+    var wordCount = 0;
+    
+	if(!(contents === '')) {
+	    wordCount = jQuery.trim($("#editor").val()).replace(/\s+/g," ").split(' ').length;
+	}
+	
+	return wordCount;
+}
