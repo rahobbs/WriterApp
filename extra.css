@@ -45,4 +45,7 @@ body {
 }
 .background-purple {
     background-image:url('purple_abstract.jpg');
-}        
+}   
+.background-felt {
+    background-image:url('felt.png');
+}     
