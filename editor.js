@@ -28,7 +28,7 @@ function setEditorFontSize(size) {
 }
 
 function setBackground(background) {
-    $("body").removeClass("background-purple background-process").addClass("background-"+background);
+    $("body").removeClass("background-purple background-process background-felt").addClass("background-"+background);
 }
 
 function setDownloadText() {
