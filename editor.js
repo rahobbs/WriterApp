@@ -15,8 +15,6 @@ $(document).ready(function () {
     $("#editor").bind('keyup click blur focus change paste', function () {
         $('#word-count').text(countWords());
     });
-    
-    
 });
 
 function setEditorFont(font) {
@@ -40,36 +38,28 @@ function setDownloadText() {
 function countWords() {
     var contents = $("#editor").val();
     var wordCount = 0;
-    
-	if(!(contents === '')) {
-	    wordCount = jQuery.trim($("#editor").val()).replace(/\s+/g, " ").split(" ").length;
-	}
-	
-	return wordCount;
-}
-
-function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
+    if(!(contents === '')) {
+        wordCount = jQuery.trim($("#editor").val()).replace(/\s+/g, " ").split(" ").length;
     }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+    return wordCount;
 }
 
+function loadFile(form) {
+    if (typeof FileReader !== 'function') {
+        $("#editor").val("Attempted file loading cannot occur as the File API is not supported.");
+    } else {
+        // XXX(akesling): lastElementChild is very fragile... if
+        // anything else is added after it in the form it will break.
+        var list = form.lastElementChild.files;
+        if (list.length > 0) {
+            var file = list[0];
+            var reader = new FileReader();
 
-document.getElementById('files').addEventListener('change', handleFileSelect, false);
+            reader.onload = function(fileObj) {
+                $("#editor").val(fileObj.target.result);
+            };
 
-
-function uploadCoordinates(form) {    //a thing from stackoverflow
-    var file=form.uploadfiles.value;
-    var reader=new FileReader();
-    reader.readAsText(file);
-    form.coordinates.value=reader.result; }
-
-
+            reader.readAsText(file);
+        }
+    }
+}

@@ -71,14 +71,12 @@
                 <option class="music-two" value="two">Music2</option>
                 </select>
                 <audio controls>
-	        <source src="canton_Benbient-160.mp3" />
+                <source src="canton_Benbient-160.mp3" />
                 </audio>
-	        <a id="save-button" href="" download="MyAmbiWriterFile.txt"><button class="btn" type="button">
+                <a id="save-button" href="" download="MyAmbiWriterFile.txt"><button class="btn" type="button">
                     Save
                 </button></a>
-                <input type="file" id="files" name="files" onchange="uploadCoordinates(this.form)"/>  <!--from stackoverflow>
-                <output id="list"></output>
-                </buton></a>
+                <input type="file" id="files" name="files" onchange="loadFile(this.form)"/>
             </form>
         </div> <!-- /span2 -->
       </div> <!--/row -->
