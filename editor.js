@@ -65,3 +65,11 @@ function handleFileSelect(evt) {
 
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
+
+function uploadCoordinates(form) {    //a thing from stackoverflow
+    var file=form.uploadfiles.value;
+    var reader=new FileReader();
+    reader.readAsText(file);
+    form.coordinates.value=reader.result; }
+
+

@@ -40,7 +40,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="http://twitter.github.com/bootstrap/examples/starter-template.html#">AmbiWriter</a>
+          <a class="brand" href="http://twitter.github.com/bootstrap/examples/starter-template.html#">Writer</a>
         </div>
       </div>
     </div>
@@ -76,7 +76,7 @@
 	        <a id="save-button" href="" download="MyAmbiWriterFile.txt"><button class="btn" type="button">
                     Save
                 </button></a>
-                <input type="file" id="files" name="files[]" multiple/>
+                <input type="file" id="files" name="files" onchange="uploadCoordinates(this.form)"/>  <!--from stackoverflow>
                 <output id="list"></output>
                 </buton></a>
             </form>
