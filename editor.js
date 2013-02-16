@@ -5,6 +5,7 @@ $(document).ready(function () {
     $("#font-size").change(function () {
         setEditorFontSize($("#font-size").val());
     });
+
     $("#background-select").change(function () {
         setBackground($("#background-select option:selected").val());
     });
