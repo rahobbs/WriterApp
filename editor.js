@@ -58,6 +58,7 @@ function loadFile(form) {
 
             reader.onload = function(fileObj) {
                 $("#editor").val(fileObj.target.result);
+                $('#word-count').text(countWords());
             };
 
             reader.readAsText(file);
