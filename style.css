@@ -4,6 +4,8 @@
     --sheet-bg: rgba(255, 255, 255, 0.82);
     --bar-bg: rgba(255, 255, 255, 0.72);
     --border: rgba(0, 0, 0, 0.12);
+    --sheet-border: var(--border);
+    --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     --accent: #5b5ea6;
     --plain-bg: #f4f1ea;
 }
@@ -12,9 +14,13 @@
     :root {
         --text: #e8e6e3;
         --muted: #a5a29d;
-        --sheet-bg: rgba(24, 24, 28, 0.82);
+        /* Lifted a couple of shades above --plain-bg (#1d1d21) so the sheet
+           reads as a distinct surface instead of blending into the page. */
+        --sheet-bg: rgba(52, 52, 59, 0.88);
         --bar-bg: rgba(24, 24, 28, 0.72);
         --border: rgba(255, 255, 255, 0.15);
+        --sheet-border: rgba(255, 255, 255, 0.28);
+        --sheet-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
         --accent: #9b9ee0;
         --plain-bg: #1d1d21;
     }
@@ -190,9 +196,9 @@ body {
     margin: 1.5rem auto;
     background: var(--sheet-bg);
     backdrop-filter: blur(4px);
-    border: 1px solid var(--border);
+    border: 1px solid var(--sheet-border);
     border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--sheet-shadow);
 }
 
 #editor {
