@@ -22,9 +22,14 @@ const loadButton = document.getElementById("load-button");
 const fileInput = document.getElementById("file-input");
 const wordCount = document.getElementById("word-count");
 const charCount = document.getElementById("char-count");
+const readingTime = document.getElementById("reading-time");
 const autosaveStatus = document.getElementById("autosave-status");
 
+const WORDS_PER_MINUTE = 200;
+const STATUS_FADE_MS = 2000;
+
 let autosaveTimer = null;
+let statusFadeTimer = null;
 let fontSize = FONT_SIZE_DEFAULT;
 
 /** Editor appearance ********************************************************/
@@ -98,25 +103,41 @@ function countWords(text) {
     return trimmed === "" ? 0 : trimmed.split(/\s+/).length;
 }
 
+function formatReadingTime(words) {
+    const minutes = Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+    return minutes + " min read";
+}
+
 function updateCounts() {
     const text = editor.value;
-    wordCount.textContent = countWords(text);
+    const words = countWords(text);
+    wordCount.textContent = words;
     charCount.textContent = text.length;
+    readingTime.textContent = words > 0 ? " · " + formatReadingTime(words) : "";
 }
 
 /** Autosave *****************************************************************/
 
+// Shows a brief status message in the status bar. Transient messages
+// (the common case) fade out on their own after STATUS_FADE_MS; persistent
+// ones (like a storage error) stay visible until replaced.
+function showStatus(message, transient) {
+    clearTimeout(statusFadeTimer);
+    autosaveStatus.textContent = message;
+    autosaveStatus.classList.add("visible");
+    if (transient) {
+        statusFadeTimer = setTimeout(function () {
+            autosaveStatus.classList.remove("visible");
+        }, STATUS_FADE_MS);
+    }
+}
+
 function autosaveDraft() {
     try {
         localStorage.setItem(DRAFT_KEY, editor.value);
-        const time = new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-        autosaveStatus.textContent = "Draft autosaved at " + time;
+        showStatus("Saved ✓", true);
     } catch (err) {
-        autosaveStatus.textContent =
-            "Autosave unavailable — save your work to a file";
+        showStatus("Autosave unavailable — save your work to a file", false);
     }
 }
 
@@ -134,7 +155,7 @@ function restoreDraft() {
     }
     if (draft) {
         editor.value = draft;
-        autosaveStatus.textContent = "Draft restored from this browser";
+        showStatus("Draft restored", true);
     }
 }
 

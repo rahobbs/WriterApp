@@ -243,6 +243,17 @@ body {
     border-top: 1px solid var(--border);
 }
 
+/* Autosave/restore status is a brief, quiet aside — hidden by default and
+ * only shown momentarily via the .visible class (see showStatus() in
+ * editor.js), rather than permanently narrating what the app is doing. */
+#autosave-status {
+    opacity: 0;
+}
+
+#autosave-status.visible {
+    opacity: 1;
+}
+
 /** Distraction-free writing mode *********************************************
  * While the user is actively typing, the toolbar and status bar fade to
  * near-invisible so the chrome defers to the text. They return on mouse
@@ -262,5 +273,9 @@ body {
     .toolbar,
     .statusbar {
         transition: opacity 0.4s ease;
+    }
+
+    #autosave-status {
+        transition: opacity 0.6s ease;
     }
 }
