@@ -29,10 +29,14 @@
                             <option value="lusitana">Lusitana</option>
                         </select>
                     </label>
-                    <label>
-                        <span class="control-label">Size</span>
-                        <input id="font-size" type="number" min="10" max="48" step="1" value="14">
-                    </label>
+                    <div class="control-row">
+                        <span class="control-label" id="font-size-label">Size</span>
+                        <div class="stepper" role="group" aria-labelledby="font-size-label">
+                            <button type="button" id="font-size-decrease" class="stepper-button" aria-label="Decrease font size">A&minus;</button>
+                            <span id="font-size-value" class="stepper-value" aria-live="polite">14</span>
+                            <button type="button" id="font-size-increase" class="stepper-button" aria-label="Increase font size">A+</button>
+                        </div>
+                    </div>
                     <label>
                         <span class="control-label">Background</span>
                         <select id="background-select">

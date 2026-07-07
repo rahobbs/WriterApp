@@ -86,7 +86,8 @@ body {
     margin-left: auto;
 }
 
-.toolbar-actions label {
+.toolbar-actions label,
+.toolbar-actions .control-row {
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -108,10 +109,6 @@ body {
 .toolbar-actions select option {
     color: initial;
     background: initial;
-}
-
-.toolbar-actions input[type="number"] {
-    width: 4.5rem;
 }
 
 .toolbar-actions button {
@@ -152,8 +149,36 @@ body {
     display: none;
 }
 
-.settings-popover label {
+.settings-popover label,
+.settings-popover .control-row {
     justify-content: space-between;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.stepper-button {
+    line-height: 1;
+    padding: 0.25rem 0.45rem;
+}
+
+.stepper-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.stepper-button:disabled:hover {
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.stepper-value {
+    min-width: 1.6rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 /** Editor *******************************************************************/

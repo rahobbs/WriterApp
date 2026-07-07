@@ -4,10 +4,16 @@ const DRAFT_KEY = "writerapp.draft";
 const PREFS_KEY = "writerapp.prefs";
 const FONTS = ["ovo", "muli", "karla", "lusitana"];
 const THEMES = ["felt", "purple", "process", "plain"];
+const FONT_SIZE_MIN = 10;
+const FONT_SIZE_MAX = 32;
+const FONT_SIZE_STEP = 2;
+const FONT_SIZE_DEFAULT = 14;
 
 const editor = document.getElementById("editor");
 const fontSelect = document.getElementById("font-select");
-const fontSizeInput = document.getElementById("font-size");
+const fontSizeDecrease = document.getElementById("font-size-decrease");
+const fontSizeIncrease = document.getElementById("font-size-increase");
+const fontSizeValue = document.getElementById("font-size-value");
 const backgroundSelect = document.getElementById("background-select");
 const settingsButton = document.getElementById("settings-button");
 const settingsPopover = document.getElementById("settings-popover");
@@ -19,6 +25,7 @@ const charCount = document.getElementById("char-count");
 const autosaveStatus = document.getElementById("autosave-status");
 
 let autosaveTimer = null;
+let fontSize = FONT_SIZE_DEFAULT;
 
 /** Editor appearance ********************************************************/
 
@@ -31,6 +38,18 @@ function setEditorFontSize(size) {
     editor.style.fontSize = size + "pt";
 }
 
+function updateFontSizeControls() {
+    fontSizeValue.textContent = fontSize;
+    fontSizeDecrease.disabled = fontSize <= FONT_SIZE_MIN;
+    fontSizeIncrease.disabled = fontSize >= FONT_SIZE_MAX;
+}
+
+function applyFontSize(size) {
+    fontSize = Math.min(FONT_SIZE_MAX, Math.max(FONT_SIZE_MIN, size));
+    setEditorFontSize(fontSize);
+    updateFontSizeControls();
+}
+
 function setBackground(theme) {
     document.body.classList.remove(...THEMES.map((t) => "theme-" + t));
     document.body.classList.add("theme-" + theme);
@@ -40,7 +59,7 @@ function savePrefs() {
     try {
         localStorage.setItem(PREFS_KEY, JSON.stringify({
             font: fontSelect.value,
-            fontSize: fontSizeInput.value,
+            fontSize: fontSize,
             background: backgroundSelect.value,
         }));
     } catch (err) {
@@ -64,8 +83,7 @@ function restorePrefs() {
         setEditorFont(prefs.font);
     }
     if (prefs.fontSize) {
-        fontSizeInput.value = prefs.fontSize;
-        setEditorFontSize(prefs.fontSize);
+        applyFontSize(Number(prefs.fontSize));
     }
     if (THEMES.includes(prefs.background)) {
         backgroundSelect.value = prefs.background;
@@ -185,8 +203,13 @@ fontSelect.addEventListener("change", function () {
     savePrefs();
 });
 
-fontSizeInput.addEventListener("change", function () {
-    setEditorFontSize(fontSizeInput.value);
+fontSizeDecrease.addEventListener("click", function () {
+    applyFontSize(fontSize - FONT_SIZE_STEP);
+    savePrefs();
+});
+
+fontSizeIncrease.addEventListener("click", function () {
+    applyFontSize(fontSize + FONT_SIZE_STEP);
     savePrefs();
 });
 
@@ -251,6 +274,7 @@ editor.addEventListener("blur", exitWritingMode);
 document.addEventListener("mousemove", exitWritingMode);
 document.addEventListener("touchstart", exitWritingMode);
 
+updateFontSizeControls();
 restorePrefs();
 restoreDraft();
 updateCounts();
