@@ -1,0 +1,179 @@
+:root {
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+    --sheet-bg: rgba(255, 255, 255, 0.82);
+    --bar-bg: rgba(255, 255, 255, 0.72);
+    --border: rgba(0, 0, 0, 0.12);
+    --accent: #5b5ea6;
+    --plain-bg: #f4f1ea;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #e8e6e3;
+        --muted: #a5a29d;
+        --sheet-bg: rgba(24, 24, 28, 0.82);
+        --bar-bg: rgba(24, 24, 28, 0.72);
+        --border: rgba(255, 255, 255, 0.15);
+        --accent: #9b9ee0;
+        --plain-bg: #1d1d21;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    font-family: 'Muli', system-ui, sans-serif;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/** Backgrounds **************************************************************/
+
+.theme-felt {
+    background-image: url('felt.png');
+    background-size: auto;
+}
+
+.theme-purple {
+    background-image: url('purple_abstract.jpg');
+}
+
+/* The original "Process" photo was hotlinked from Flickr and is long gone;
+   this gradient stands in for it. */
+.theme-process {
+    background-image: linear-gradient(135deg, #2c3e50, #4b6584, #778ca3);
+}
+
+.theme-plain {
+    background-image: none;
+    background-color: var(--plain-bg);
+}
+
+/** Toolbar ******************************************************************/
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.5rem 1rem;
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-family: 'Ovo', serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.controls select,
+.controls input,
+.controls button {
+    font: inherit;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+}
+
+.controls select option {
+    color: initial;
+    background: initial;
+}
+
+.controls input[type="number"] {
+    width: 4.5rem;
+}
+
+.controls button {
+    cursor: pointer;
+}
+
+.controls button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/** Editor *******************************************************************/
+
+.sheet {
+    flex: 1;
+    display: flex;
+    width: min(48rem, 100% - 2rem);
+    margin: 1.5rem auto;
+    background: var(--sheet-bg);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+#editor {
+    flex: 1;
+    width: 100%;
+    padding: 2rem;
+    border: none;
+    resize: none;
+    background: none;
+    color: var(--text);
+    font-size: 14pt;
+    line-height: 1.6;
+    border-radius: 10px;
+}
+
+#editor:focus {
+    outline: none;
+}
+
+#editor::placeholder {
+    color: var(--muted);
+}
+
+/** Fonts ********************************************************************/
+
+.font-ovo      { font-family: 'Ovo', serif; }
+.font-muli     { font-family: 'Muli', sans-serif; }
+.font-karla    { font-family: 'Karla', sans-serif; }
+.font-lusitana { font-family: 'Lusitana', serif; }
+
+/** Status bar ***************************************************************/
+
+.statusbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+}

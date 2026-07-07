@@ -1,73 +1,197 @@
-$(document).ready(function () {
-    $("#font-select").change(function () {
-        setEditorFont($("#font-select option:selected").val());
-    });
-    $("#font-size").change(function () {
-        setEditorFontSize($("#font-size").val());
-    });
+"use strict";
 
-    $("#background-select").change(function () {
-        setBackground($("#background-select option:selected").val());
-    });
-    $("#save-button").click(function () {
-        setDownloadText();
-        return true;
-    });
-    $("#editor").bind('keyup click blur focus change paste', function () {
-        $('#word-count').text(countWords());
-    });
-});
+const DRAFT_KEY = "writerapp.draft";
+const PREFS_KEY = "writerapp.prefs";
+const FONTS = ["ovo", "muli", "karla", "lusitana"];
+const THEMES = ["felt", "purple", "process", "plain"];
+
+const editor = document.getElementById("editor");
+const fontSelect = document.getElementById("font-select");
+const fontSizeInput = document.getElementById("font-size");
+const backgroundSelect = document.getElementById("background-select");
+const saveButton = document.getElementById("save-button");
+const loadButton = document.getElementById("load-button");
+const fileInput = document.getElementById("file-input");
+const wordCount = document.getElementById("word-count");
+const charCount = document.getElementById("char-count");
+const autosaveStatus = document.getElementById("autosave-status");
+
+let autosaveTimer = null;
+
+/** Editor appearance ********************************************************/
 
 function setEditorFont(font) {
-    $("#editor").removeClass("font-ovo font-karla font-lusatania font-muli").addClass("font-"+font);
+    editor.classList.remove(...FONTS.map((f) => "font-" + f));
+    editor.classList.add("font-" + font);
 }
 
 function setEditorFontSize(size) {
-    $("#editor").css({"font-size":size+"pt","line-height":(size*1.5)+"pt"});
+    editor.style.fontSize = size + "pt";
 }
 
-function setBackground(background) {
-    $("body").removeClass("background-purple background-process background-felt").addClass("background-"+background);
+function setBackground(theme) {
+    document.body.classList.remove(...THEMES.map((t) => "theme-" + t));
+    document.body.classList.add("theme-" + theme);
 }
 
-var currentDownloadUrl = null;
-
-function setDownloadText() {
-    var dlText = $("#editor").val();
-    var tag = $("#save-button");
-    // A Blob handles any Unicode text; window.btoa threw on non-ASCII characters.
-    if (currentDownloadUrl !== null) {
-        URL.revokeObjectURL(currentDownloadUrl);
-    }
-    var blob = new Blob([dlText], {type: "text/plain;charset=utf-8"});
-    currentDownloadUrl = URL.createObjectURL(blob);
-    tag.attr("href", currentDownloadUrl);
-}
-
-function countWords() {
-    var contents = $("#editor").val();
-    var wordCount = 0;
-    if(!(contents === '')) {
-        wordCount = jQuery.trim($("#editor").val()).replace(/\s+/g, " ").split(" ").length;
-    }
-    return wordCount;
-}
-
-function loadFile(input) {
-    if (!window.FileReader) {
-        $("#editor").val("Attempted file loading cannot occur as the File API is not supported.");
-    } else {
-        var list = input.files;
-        if (list.length > 0) {
-            var file = list[0];
-            var reader = new FileReader();
-
-            reader.onload = function(fileObj) {
-                $("#editor").val(fileObj.target.result);
-                $('#word-count').text(countWords());
-            };
-
-            reader.readAsText(file);
-        }
+function savePrefs() {
+    try {
+        localStorage.setItem(PREFS_KEY, JSON.stringify({
+            font: fontSelect.value,
+            fontSize: fontSizeInput.value,
+            background: backgroundSelect.value,
+        }));
+    } catch (err) {
+        // Storage may be unavailable (private mode, quota); appearance just
+        // won't persist.
     }
 }
+
+function restorePrefs() {
+    let prefs;
+    try {
+        prefs = JSON.parse(localStorage.getItem(PREFS_KEY));
+    } catch (err) {
+        return;
+    }
+    if (!prefs) {
+        return;
+    }
+    if (FONTS.includes(prefs.font)) {
+        fontSelect.value = prefs.font;
+        setEditorFont(prefs.font);
+    }
+    if (prefs.fontSize) {
+        fontSizeInput.value = prefs.fontSize;
+        setEditorFontSize(prefs.fontSize);
+    }
+    if (THEMES.includes(prefs.background)) {
+        backgroundSelect.value = prefs.background;
+        setBackground(prefs.background);
+    }
+}
+
+/** Word count ***************************************************************/
+
+function countWords(text) {
+    const trimmed = text.trim();
+    return trimmed === "" ? 0 : trimmed.split(/\s+/).length;
+}
+
+function updateCounts() {
+    const text = editor.value;
+    wordCount.textContent = countWords(text);
+    charCount.textContent = text.length;
+}
+
+/** Autosave *****************************************************************/
+
+function autosaveDraft() {
+    try {
+        localStorage.setItem(DRAFT_KEY, editor.value);
+        const time = new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        autosaveStatus.textContent = "Draft autosaved at " + time;
+    } catch (err) {
+        autosaveStatus.textContent =
+            "Autosave unavailable — save your work to a file";
+    }
+}
+
+function scheduleAutosave() {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(autosaveDraft, 500);
+}
+
+function restoreDraft() {
+    let draft = null;
+    try {
+        draft = localStorage.getItem(DRAFT_KEY);
+    } catch (err) {
+        return;
+    }
+    if (draft) {
+        editor.value = draft;
+        autosaveStatus.textContent = "Draft restored from this browser";
+    }
+}
+
+/** Save and load files ******************************************************/
+
+function saveToFile() {
+    const blob = new Blob([editor.value], {type: "text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "MyAmbiWriterFile.txt";
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+function loadFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        editor.value = event.target.result;
+        updateCounts();
+        autosaveDraft();
+    };
+    reader.onerror = function () {
+        alert("Could not read " + file.name + ".");
+    };
+    reader.readAsText(file);
+}
+
+/** Wiring *******************************************************************/
+
+fontSelect.addEventListener("change", function () {
+    setEditorFont(fontSelect.value);
+    savePrefs();
+});
+
+fontSizeInput.addEventListener("change", function () {
+    setEditorFontSize(fontSizeInput.value);
+    savePrefs();
+});
+
+backgroundSelect.addEventListener("change", function () {
+    setBackground(backgroundSelect.value);
+    savePrefs();
+});
+
+saveButton.addEventListener("click", saveToFile);
+
+document.addEventListener("keydown", function (event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+        event.preventDefault();
+        saveToFile();
+    }
+});
+
+loadButton.addEventListener("click", function () {
+    fileInput.click();
+});
+
+fileInput.addEventListener("change", function () {
+    const file = fileInput.files[0];
+    if (!file) {
+        return;
+    }
+    if (editor.value.trim() !== "" &&
+        !confirm("Loading " + file.name + " will replace your current text. Continue?")) {
+        fileInput.value = "";
+        return;
+    }
+    loadFromFile(file);
+    fileInput.value = "";
+});
+
+editor.addEventListener("input", function () {
+    updateCounts();
+    scheduleAutosave();
+});
+
+restorePrefs();
+restoreDraft();
+updateCounts();

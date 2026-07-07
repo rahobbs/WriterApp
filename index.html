@@ -1,87 +1,60 @@
 <!DOCTYPE html>
-<!-- saved from url=(0066)http://twitter.github.com/bootstrap/examples/starter-template.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <title>Writer App</title>
+    <title>Writer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="A minimalist, distraction-free writing app that runs entirely in your browser.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✒️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Ovo|Muli|Karla|Lusitana&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
 
-    <!-- Le styles -->
-    <link href="https://fonts.googleapis.com/css?family=Ovo|Muli|Karla|Lusitana" rel="stylesheet" type="text/css">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="extra.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<body class="theme-felt">
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="hidiousfavicon.ico">
-  </head>
-
-  <body class="background-felt">
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">Writer</a>
+    <header class="toolbar">
+        <span class="brand">Writer</span>
+        <div class="controls">
+            <label>
+                <span class="control-label">Font</span>
+                <select id="font-select">
+                    <option value="ovo" selected>Ovo</option>
+                    <option value="muli">Muli</option>
+                    <option value="karla">Karla</option>
+                    <option value="lusitana">Lusitana</option>
+                </select>
+            </label>
+            <label>
+                <span class="control-label">Size</span>
+                <input id="font-size" type="number" min="10" max="48" step="1" value="14">
+            </label>
+            <label>
+                <span class="control-label">Background</span>
+                <select id="background-select">
+                    <option value="felt" selected>Felt</option>
+                    <option value="purple">Purple</option>
+                    <option value="process">Process</option>
+                    <option value="plain">Plain</option>
+                </select>
+            </label>
+            <button id="load-button" type="button" title="Load a text file">Load</button>
+            <button id="save-button" type="button" title="Save as a text file (Ctrl+S)">Save</button>
+            <input type="file" id="file-input" accept=".txt,.md,text/*" hidden>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span10">
-            <textarea id="editor" class="font-ovo" placeholder="Start writing your text here"></textarea>
-            <div>Word Count: <span id="word-count">0</span>
-            </div>
-        </div>
-        <div class="span2">
-            <form class="form" onsubmit="return false;">
-                <select id="font-select" class="form-element" name="fonts">
-                <option class="font-ovo" value="ovo">Ovo</option>
-                <option class="font-muli" value="muli">Muli</option>
-                <option class="font-karla" value="karla">Karla</option>
-                <option class="font-lusatania" value="lusatania">Lusitana</option>
-                </select>
-                <input id="font-size" class="form-element" type="text" placeholder="Font Size">
-                <select id="background-select" class="form-element" name="backgrounds">
-                <option class="background-purple" value="purple">Purple</option>
-                <option class="background-process" value="process">Process</option>
-                <option class="background-felt" value="felt">Felt</option>
-                </select>
-                <!--<select id="music-select" class="form-element" name="music">
-                <option class="music-one" value="one">Music1</option>
-                <option class="music-two" value="two">Music2</option>
-                </select>
-                <audio controls>
-                <source src="canton_Benbient-160.mp3" />
-                </audio>-->
-                <a id="save-button" class="btn" href="" download="MyAmbiWriterFile.txt">Save</a>
-                <input type="file" id="files" name="files" onchange="loadFile(this)"/>
-            </form>
-        </div> <!-- /span2 -->
-      </div> <!--/row -->
+    <main class="sheet">
+        <textarea id="editor" class="font-ovo" placeholder="Start writing your text here" autofocus spellcheck="true"></textarea>
+    </main>
 
-    </div> <!-- /container -->
+    <footer class="statusbar">
+        <span><span id="word-count">0</span> words · <span id="char-count">0</span> characters</span>
+        <span id="autosave-status" aria-live="polite"></span>
+    </footer>
 
-
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="jquery-1.7.2.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="editor.js"></script>
 
-  
-
-</body></html>
+</body>
+</html>
