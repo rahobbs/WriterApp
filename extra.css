@@ -33,14 +33,15 @@ body {
 }
 
 .font-lusatania {
-    font-family: 'Lusatania', serif;
+    font-family: 'Lusitana', serif;
 }
 
 /** Background Images *******************************************************/
 /****************************************************************************/
 
 .background-process {
-    background-image:url('http://farm5.staticflickr.com/4083/5047210596_0d60ca4b5f_o.jpg');
+    /* The original Flickr-hosted image is gone; a gradient stands in for it. */
+    background-image:linear-gradient(135deg, #2c3e50, #4b6584, #778ca3);
 }
 .background-purple {
     background-image:url('purple_abstract.jpg');

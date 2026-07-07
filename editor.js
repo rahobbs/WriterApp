@@ -23,17 +23,25 @@ function setEditorFont(font) {
 }
 
 function setEditorFontSize(size) {
-    $("#editor").css({"font-size":size+"pt","line-height":size+"pt"});
+    $("#editor").css({"font-size":size+"pt","line-height":(size*1.5)+"pt"});
 }
 
 function setBackground(background) {
     $("body").removeClass("background-purple background-process background-felt").addClass("background-"+background);
 }
 
+var currentDownloadUrl = null;
+
 function setDownloadText() {
     var dlText = $("#editor").val();
     var tag = $("#save-button");
-    tag.attr("href", "data:text/plain;base64,"+ window.btoa(dlText));
+    // A Blob handles any Unicode text; window.btoa threw on non-ASCII characters.
+    if (currentDownloadUrl !== null) {
+        URL.revokeObjectURL(currentDownloadUrl);
+    }
+    var blob = new Blob([dlText], {type: "text/plain;charset=utf-8"});
+    currentDownloadUrl = URL.createObjectURL(blob);
+    tag.attr("href", currentDownloadUrl);
 }
 
 function countWords() {
@@ -45,13 +53,11 @@ function countWords() {
     return wordCount;
 }
 
-function loadFile(form) {
-    if (typeof FileReader !== 'function') {
+function loadFile(input) {
+    if (!window.FileReader) {
         $("#editor").val("Attempted file loading cannot occur as the File API is not supported.");
     } else {
-        // XXX(akesling): lastElementChild is very fragile... if
-        // anything else is added after it in the form it will break.
-        var list = form.lastElementChild.files;
+        var list = input.files;
         if (list.length > 0) {
             var file = list[0];
             var reader = new FileReader();
