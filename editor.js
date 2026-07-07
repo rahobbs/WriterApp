@@ -143,6 +143,16 @@ function loadFromFile(file) {
     reader.readAsText(file);
 }
 
+/** Distraction-free writing mode ********************************************/
+
+function enterWritingMode() {
+    document.body.classList.add("writing");
+}
+
+function exitWritingMode() {
+    document.body.classList.remove("writing");
+}
+
 /** Wiring *******************************************************************/
 
 fontSelect.addEventListener("change", function () {
@@ -190,7 +200,13 @@ fileInput.addEventListener("change", function () {
 editor.addEventListener("input", function () {
     updateCounts();
     scheduleAutosave();
+    enterWritingMode();
 });
+
+editor.addEventListener("keydown", enterWritingMode);
+editor.addEventListener("blur", exitWritingMode);
+document.addEventListener("mousemove", exitWritingMode);
+document.addEventListener("touchstart", exitWritingMode);
 
 restorePrefs();
 restoreDraft();

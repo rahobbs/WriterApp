@@ -177,3 +177,25 @@ body {
     backdrop-filter: blur(8px);
     border-top: 1px solid var(--border);
 }
+
+/** Distraction-free writing mode *********************************************
+ * While the user is actively typing, the toolbar and status bar fade to
+ * near-invisible so the chrome defers to the text. They return on mouse
+ * movement, touch, focus leaving the editor, or by hovering a faded bar. */
+
+.writing .toolbar,
+.writing .statusbar {
+    opacity: 0.05;
+}
+
+.writing .toolbar:hover,
+.writing .statusbar:hover {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .toolbar,
+    .statusbar {
+        transition: opacity 0.4s ease;
+    }
+}
