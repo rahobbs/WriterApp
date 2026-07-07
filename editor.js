@@ -9,6 +9,8 @@ const editor = document.getElementById("editor");
 const fontSelect = document.getElementById("font-select");
 const fontSizeInput = document.getElementById("font-size");
 const backgroundSelect = document.getElementById("background-select");
+const settingsButton = document.getElementById("settings-button");
+const settingsPopover = document.getElementById("settings-popover");
 const saveButton = document.getElementById("save-button");
 const loadButton = document.getElementById("load-button");
 const fileInput = document.getElementById("file-input");
@@ -153,6 +155,29 @@ function exitWritingMode() {
     document.body.classList.remove("writing");
 }
 
+/** Settings popover ***********************************************************/
+
+function openSettings() {
+    settingsPopover.hidden = false;
+    settingsButton.setAttribute("aria-expanded", "true");
+    // The popover has its own focus target; don't let the chrome fade while
+    // it's open.
+    exitWritingMode();
+}
+
+function closeSettings() {
+    settingsPopover.hidden = true;
+    settingsButton.setAttribute("aria-expanded", "false");
+}
+
+function toggleSettings() {
+    if (settingsPopover.hidden) {
+        openSettings();
+    } else {
+        closeSettings();
+    }
+}
+
 /** Wiring *******************************************************************/
 
 fontSelect.addEventListener("change", function () {
@@ -168,6 +193,24 @@ fontSizeInput.addEventListener("change", function () {
 backgroundSelect.addEventListener("change", function () {
     setBackground(backgroundSelect.value);
     savePrefs();
+});
+
+settingsButton.addEventListener("click", function (event) {
+    event.stopPropagation();
+    toggleSettings();
+});
+
+document.addEventListener("click", function (event) {
+    if (!settingsPopover.hidden && !settingsPopover.contains(event.target)) {
+        closeSettings();
+    }
+});
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !settingsPopover.hidden) {
+        closeSettings();
+        settingsButton.focus();
+    }
 });
 
 saveButton.addEventListener("click", saveToFile);

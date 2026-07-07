@@ -61,10 +61,11 @@ body {
 /** Toolbar ******************************************************************/
 
 .toolbar {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 0.5rem 1rem;
     background: var(--bar-bg);
     backdrop-filter: blur(8px);
@@ -75,17 +76,17 @@ body {
     font-family: 'Ovo', serif;
     font-size: 1.3rem;
     letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
-.controls {
+.toolbar-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-left: auto;
 }
 
-.controls label {
+.toolbar-actions label {
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -93,9 +94,9 @@ body {
     color: var(--muted);
 }
 
-.controls select,
-.controls input,
-.controls button {
+.toolbar-actions select,
+.toolbar-actions input,
+.toolbar-actions button {
     font: inherit;
     color: var(--text);
     background: transparent;
@@ -104,22 +105,55 @@ body {
     padding: 0.25rem 0.5rem;
 }
 
-.controls select option {
+.toolbar-actions select option {
     color: initial;
     background: initial;
 }
 
-.controls input[type="number"] {
+.toolbar-actions input[type="number"] {
     width: 4.5rem;
 }
 
-.controls button {
+.toolbar-actions button {
     cursor: pointer;
 }
 
-.controls button:hover {
+.toolbar-actions button:hover {
     border-color: var(--accent);
     color: var(--accent);
+}
+
+/** Settings popover ***********************************************************/
+
+#settings-button[aria-expanded="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.settings-popover {
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 12rem;
+    padding: 0.75rem;
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+}
+
+.settings-popover[hidden] {
+    display: none;
+}
+
+.settings-popover label {
+    justify-content: space-between;
 }
 
 /** Editor *******************************************************************/
