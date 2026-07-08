@@ -4,20 +4,62 @@
     --sheet-bg: rgba(255, 255, 255, 0.82);
     --bar-bg: rgba(255, 255, 255, 0.72);
     --border: rgba(0, 0, 0, 0.12);
+    --sheet-border: var(--border);
+    --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     --accent: #5b5ea6;
-    --plain-bg: #f4f1ea;
+    --plain-bg: #f7f1e3;
+    color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --text: #e8e6e3;
         --muted: #a5a29d;
-        --sheet-bg: rgba(24, 24, 28, 0.82);
+        /* Lifted a couple of shades above --plain-bg (#1d1d21) so the sheet
+           reads as a distinct surface instead of blending into the page. */
+        --sheet-bg: rgba(52, 52, 59, 0.88);
         --bar-bg: rgba(24, 24, 28, 0.72);
         --border: rgba(255, 255, 255, 0.15);
+        --sheet-border: rgba(255, 255, 255, 0.28);
+        --sheet-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
         --accent: #9b9ee0;
         --plain-bg: #1d1d21;
+        color-scheme: dark;
     }
+}
+
+/* Manual color-scheme override (see #scheme-select in editor.js, which sets
+   data-scheme="light"/"dark" on <html>, or removes it for "auto"). These
+   attribute selectors have higher specificity than the plain :root above,
+   so a manual choice wins over both the light default and the
+   prefers-color-scheme media query regardless of source order or OS
+   setting. The dark variable list is duplicated from the media query block
+   above rather than factored, to keep each block simple and self-contained
+   in plain CSS. */
+:root[data-scheme="dark"] {
+    --text: #e8e6e3;
+    --muted: #a5a29d;
+    --sheet-bg: rgba(52, 52, 59, 0.88);
+    --bar-bg: rgba(24, 24, 28, 0.72);
+    --border: rgba(255, 255, 255, 0.15);
+    --sheet-border: rgba(255, 255, 255, 0.28);
+    --sheet-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
+    --accent: #9b9ee0;
+    --plain-bg: #1d1d21;
+    color-scheme: dark;
+}
+
+:root[data-scheme="light"] {
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+    --sheet-bg: rgba(255, 255, 255, 0.82);
+    --bar-bg: rgba(255, 255, 255, 0.72);
+    --border: rgba(0, 0, 0, 0.12);
+    --sheet-border: var(--border);
+    --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --accent: #5b5ea6;
+    --plain-bg: #f7f1e3;
+    color-scheme: light;
 }
 
 * {
@@ -38,9 +80,11 @@ body {
 
 /** Backgrounds **************************************************************/
 
+/* felt.png reads gray/gloomy on its own; a low-opacity warm gradient layered
+   on top gives it a gentle warm cast without touching the image itself. */
 .theme-felt {
-    background-image: url('felt.png');
-    background-size: auto;
+    background-image: linear-gradient(160deg, rgba(255, 176, 102, 0.18), rgba(255, 138, 61, 0.08)), url('felt.png');
+    background-size: cover, auto;
 }
 
 .theme-purple {
@@ -58,13 +102,20 @@ body {
     background-color: var(--plain-bg);
 }
 
+/* A deep, modern dark gradient so dark-background writing is a deliberate
+   choice, independent of the OS color scheme. */
+.theme-midnight {
+    background-image: linear-gradient(135deg, #0d1024, #171b3a, #232a52);
+}
+
 /** Toolbar ******************************************************************/
 
 .toolbar {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 0.5rem 1rem;
     background: var(--bar-bg);
     backdrop-filter: blur(8px);
@@ -75,17 +126,18 @@ body {
     font-family: 'Ovo', serif;
     font-size: 1.3rem;
     letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
-.controls {
+.toolbar-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-left: auto;
 }
 
-.controls label {
+.toolbar-actions label,
+.toolbar-actions .control-row {
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -93,9 +145,9 @@ body {
     color: var(--muted);
 }
 
-.controls select,
-.controls input,
-.controls button {
+.toolbar-actions select,
+.toolbar-actions input,
+.toolbar-actions button {
     font: inherit;
     color: var(--text);
     background: transparent;
@@ -104,22 +156,79 @@ body {
     padding: 0.25rem 0.5rem;
 }
 
-.controls select option {
+.toolbar-actions select option {
     color: initial;
     background: initial;
 }
 
-.controls input[type="number"] {
-    width: 4.5rem;
-}
-
-.controls button {
+.toolbar-actions button {
     cursor: pointer;
 }
 
-.controls button:hover {
+.toolbar-actions button:hover {
     border-color: var(--accent);
     color: var(--accent);
+}
+
+/** Settings popover ***********************************************************/
+
+#settings-button[aria-expanded="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.settings-popover {
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 12rem;
+    padding: 0.75rem;
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+}
+
+.settings-popover[hidden] {
+    display: none;
+}
+
+.settings-popover label,
+.settings-popover .control-row {
+    justify-content: space-between;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.stepper-button {
+    line-height: 1;
+    padding: 0.25rem 0.45rem;
+}
+
+.stepper-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.stepper-button:disabled:hover {
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.stepper-value {
+    min-width: 1.6rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 /** Editor *******************************************************************/
@@ -131,9 +240,9 @@ body {
     margin: 1.5rem auto;
     background: var(--sheet-bg);
     backdrop-filter: blur(4px);
-    border: 1px solid var(--border);
+    border: 1px solid var(--sheet-border);
     border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--sheet-shadow);
 }
 
 #editor {
@@ -176,4 +285,41 @@ body {
     background: var(--bar-bg);
     backdrop-filter: blur(8px);
     border-top: 1px solid var(--border);
+}
+
+/* Autosave/restore status is a brief, quiet aside — hidden by default and
+ * only shown momentarily via the .visible class (see showStatus() in
+ * editor.js), rather than permanently narrating what the app is doing. */
+#autosave-status {
+    opacity: 0;
+}
+
+#autosave-status.visible {
+    opacity: 1;
+}
+
+/** Distraction-free writing mode *********************************************
+ * While the user is actively typing, the toolbar and status bar fade to
+ * near-invisible so the chrome defers to the text. They return on mouse
+ * movement, touch, focus leaving the editor, or by hovering a faded bar. */
+
+.writing .toolbar,
+.writing .statusbar {
+    opacity: 0.05;
+}
+
+.writing .toolbar:hover,
+.writing .statusbar:hover {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .toolbar,
+    .statusbar {
+        transition: opacity 0.4s ease;
+    }
+
+    #autosave-status {
+        transition: opacity 0.6s ease;
+    }
 }

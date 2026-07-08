@@ -12,33 +12,51 @@
     <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="theme-felt">
+<body class="theme-plain">
 
     <header class="toolbar">
         <span class="brand">Writer</span>
-        <div class="controls">
-            <label>
-                <span class="control-label">Font</span>
-                <select id="font-select">
-                    <option value="ovo" selected>Ovo</option>
-                    <option value="muli">Muli</option>
-                    <option value="karla">Karla</option>
-                    <option value="lusitana">Lusitana</option>
-                </select>
-            </label>
-            <label>
-                <span class="control-label">Size</span>
-                <input id="font-size" type="number" min="10" max="48" step="1" value="14">
-            </label>
-            <label>
-                <span class="control-label">Background</span>
-                <select id="background-select">
-                    <option value="felt" selected>Felt</option>
-                    <option value="purple">Purple</option>
-                    <option value="process">Process</option>
-                    <option value="plain">Plain</option>
-                </select>
-            </label>
+        <div class="toolbar-actions">
+            <div class="settings">
+                <button id="settings-button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="settings-popover" title="Text settings">Aa</button>
+                <div id="settings-popover" class="settings-popover" role="dialog" aria-label="Text settings" hidden>
+                    <label>
+                        <span class="control-label">Font</span>
+                        <select id="font-select">
+                            <option value="ovo" selected>Ovo</option>
+                            <option value="muli">Muli</option>
+                            <option value="karla">Karla</option>
+                            <option value="lusitana">Lusitana</option>
+                        </select>
+                    </label>
+                    <div class="control-row">
+                        <span class="control-label" id="font-size-label">Size</span>
+                        <div class="stepper" role="group" aria-labelledby="font-size-label">
+                            <button type="button" id="font-size-decrease" class="stepper-button" aria-label="Decrease font size">A&minus;</button>
+                            <span id="font-size-value" class="stepper-value" aria-live="polite">14</span>
+                            <button type="button" id="font-size-increase" class="stepper-button" aria-label="Increase font size">A+</button>
+                        </div>
+                    </div>
+                    <label>
+                        <span class="control-label">Background</span>
+                        <select id="background-select">
+                            <option value="felt">Felt</option>
+                            <option value="purple">Purple</option>
+                            <option value="process">Process</option>
+                            <option value="plain" selected>Plain</option>
+                            <option value="midnight">Midnight</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span class="control-label">Scheme</span>
+                        <select id="scheme-select">
+                            <option value="auto" selected>Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
             <button id="load-button" type="button" title="Load a text file">Load</button>
             <button id="save-button" type="button" title="Save as a text file (Ctrl+S)">Save</button>
             <input type="file" id="file-input" accept=".txt,.md,text/*" hidden>
@@ -50,7 +68,7 @@
     </main>
 
     <footer class="statusbar">
-        <span><span id="word-count">0</span> words · <span id="char-count">0</span> characters</span>
+        <span><span id="word-count">0</span> words · <span id="char-count">0</span> characters<span id="reading-time"></span></span>
         <span id="autosave-status" aria-live="polite"></span>
     </footer>
 
