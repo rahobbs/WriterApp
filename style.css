@@ -8,6 +8,7 @@
     --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     --accent: #5b5ea6;
     --plain-bg: #f7f1e3;
+    color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,7 +24,42 @@
         --sheet-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
         --accent: #9b9ee0;
         --plain-bg: #1d1d21;
+        color-scheme: dark;
     }
+}
+
+/* Manual color-scheme override (see #scheme-select in editor.js, which sets
+   data-scheme="light"/"dark" on <html>, or removes it for "auto"). These
+   attribute selectors have higher specificity than the plain :root above,
+   so a manual choice wins over both the light default and the
+   prefers-color-scheme media query regardless of source order or OS
+   setting. The dark variable list is duplicated from the media query block
+   above rather than factored, to keep each block simple and self-contained
+   in plain CSS. */
+:root[data-scheme="dark"] {
+    --text: #e8e6e3;
+    --muted: #a5a29d;
+    --sheet-bg: rgba(52, 52, 59, 0.88);
+    --bar-bg: rgba(24, 24, 28, 0.72);
+    --border: rgba(255, 255, 255, 0.15);
+    --sheet-border: rgba(255, 255, 255, 0.28);
+    --sheet-shadow: 0 10px 34px rgba(0, 0, 0, 0.55);
+    --accent: #9b9ee0;
+    --plain-bg: #1d1d21;
+    color-scheme: dark;
+}
+
+:root[data-scheme="light"] {
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+    --sheet-bg: rgba(255, 255, 255, 0.82);
+    --bar-bg: rgba(255, 255, 255, 0.72);
+    --border: rgba(0, 0, 0, 0.12);
+    --sheet-border: var(--border);
+    --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --accent: #5b5ea6;
+    --plain-bg: #f7f1e3;
+    color-scheme: light;
 }
 
 * {

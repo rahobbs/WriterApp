@@ -4,6 +4,7 @@ const DRAFT_KEY = "writerapp.draft";
 const PREFS_KEY = "writerapp.prefs";
 const FONTS = ["ovo", "muli", "karla", "lusitana"];
 const THEMES = ["felt", "purple", "process", "plain", "midnight"];
+const SCHEMES = ["auto", "light", "dark"];
 const FONT_SIZE_MIN = 10;
 const FONT_SIZE_MAX = 32;
 const FONT_SIZE_STEP = 2;
@@ -15,6 +16,7 @@ const fontSizeDecrease = document.getElementById("font-size-decrease");
 const fontSizeIncrease = document.getElementById("font-size-increase");
 const fontSizeValue = document.getElementById("font-size-value");
 const backgroundSelect = document.getElementById("background-select");
+const schemeSelect = document.getElementById("scheme-select");
 const settingsButton = document.getElementById("settings-button");
 const settingsPopover = document.getElementById("settings-popover");
 const saveButton = document.getElementById("save-button");
@@ -60,12 +62,24 @@ function setBackground(theme) {
     document.body.classList.add("theme-" + theme);
 }
 
+// "auto" follows the OS via the prefers-color-scheme media query (no
+// attribute); "light"/"dark" set data-scheme on <html> so the higher-
+// specificity CSS override in style.css wins regardless of the OS setting.
+function setColorScheme(scheme) {
+    if (scheme === "light" || scheme === "dark") {
+        document.documentElement.setAttribute("data-scheme", scheme);
+    } else {
+        document.documentElement.removeAttribute("data-scheme");
+    }
+}
+
 function savePrefs() {
     try {
         localStorage.setItem(PREFS_KEY, JSON.stringify({
             font: fontSelect.value,
             fontSize: fontSize,
             background: backgroundSelect.value,
+            colorScheme: schemeSelect.value,
         }));
     } catch (err) {
         // Storage may be unavailable (private mode, quota); appearance just
@@ -93,6 +107,10 @@ function restorePrefs() {
     if (THEMES.includes(prefs.background)) {
         backgroundSelect.value = prefs.background;
         setBackground(prefs.background);
+    }
+    if (SCHEMES.includes(prefs.colorScheme)) {
+        schemeSelect.value = prefs.colorScheme;
+        setColorScheme(prefs.colorScheme);
     }
 }
 
@@ -236,6 +254,11 @@ fontSizeIncrease.addEventListener("click", function () {
 
 backgroundSelect.addEventListener("change", function () {
     setBackground(backgroundSelect.value);
+    savePrefs();
+});
+
+schemeSelect.addEventListener("change", function () {
+    setColorScheme(schemeSelect.value);
     savePrefs();
 });
 
