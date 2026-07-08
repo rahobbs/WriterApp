@@ -3,7 +3,7 @@
 const DRAFT_KEY = "writerapp.draft";
 const PREFS_KEY = "writerapp.prefs";
 const FONTS = ["ovo", "muli", "karla", "lusitana"];
-const THEMES = ["felt", "purple", "process", "plain"];
+const THEMES = ["felt", "purple", "process", "plain", "midnight"];
 const FONT_SIZE_MIN = 10;
 const FONT_SIZE_MAX = 32;
 const FONT_SIZE_STEP = 2;

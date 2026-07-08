@@ -7,7 +7,7 @@
     --sheet-border: var(--border);
     --sheet-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     --accent: #5b5ea6;
-    --plain-bg: #f4f1ea;
+    --plain-bg: #f7f1e3;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,9 +44,11 @@ body {
 
 /** Backgrounds **************************************************************/
 
+/* felt.png reads gray/gloomy on its own; a low-opacity warm gradient layered
+   on top gives it a gentle warm cast without touching the image itself. */
 .theme-felt {
-    background-image: url('felt.png');
-    background-size: auto;
+    background-image: linear-gradient(160deg, rgba(255, 176, 102, 0.18), rgba(255, 138, 61, 0.08)), url('felt.png');
+    background-size: cover, auto;
 }
 
 .theme-purple {
@@ -62,6 +64,12 @@ body {
 .theme-plain {
     background-image: none;
     background-color: var(--plain-bg);
+}
+
+/* A deep, modern dark gradient so dark-background writing is a deliberate
+   choice, independent of the OS color scheme. */
+.theme-midnight {
+    background-image: linear-gradient(135deg, #0d1024, #171b3a, #232a52);
 }
 
 /** Toolbar ******************************************************************/
